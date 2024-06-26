@@ -18,7 +18,7 @@ internal class ReposAtendente
         using (var ctx = new FloripaSurfClubContext())
         {
             return ctx.Atendentes
-                      .Include(a => a.UsuarioSistema)  // Inclui o UsuarioSistema
+                      .Include(a => a.UsuarioSistema)  
                       .FirstOrDefault(x => x.Id == pId);
         }
     }
@@ -38,8 +38,8 @@ internal class ReposAtendente
         using (var ctx = new FloripaSurfClubContext())
         {
             var atendenteExistente = ctx.Atendentes
-                                         .Include(a => a.UsuarioSistema)
-                                         .FirstOrDefault(a => a.Id == pAtendente.Id);
+                                        .Include(a => a.UsuarioSistema)
+                                        .FirstOrDefault(a => a.Id == pAtendente.Id);
 
             if (atendenteExistente != null)
             {
@@ -47,7 +47,11 @@ internal class ReposAtendente
                 atendenteExistente.ValorAReceber = pAtendente.ValorAReceber;
 
                 atendenteExistente.UsuarioSistema.Nome = pAtendente.Nome;
+                atendenteExistente.UsuarioSistema.Email = pAtendente.UsuarioSistema.Email;
+                atendenteExistente.UsuarioSistema.PhoneNumber = pAtendente.UsuarioSistema.PhoneNumber;
+
                 ctx.Entry(atendenteExistente).State = EntityState.Modified;
+                ctx.Entry(atendenteExistente.UsuarioSistema).State = EntityState.Modified;
                 return ctx.SaveChanges() > 0;
             }
 

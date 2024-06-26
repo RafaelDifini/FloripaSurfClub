@@ -29,23 +29,14 @@ namespace FloripaSurfClub.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configuração de herança TPT
             modelBuilder.Entity<UsuarioSistema>().ToTable("UsuariosSistema");
+            modelBuilder.Entity<Cliente>().ToTable("Clientes");
+            modelBuilder.Entity<Aluno>().ToTable("Alunos");
+            modelBuilder.Entity<Professor>().ToTable("Professores");
+            modelBuilder.Entity<Atendente>().ToTable("Atendentes");
 
-            modelBuilder.Entity<Professor>()
-                .HasOne(p => p.UsuarioSistema)
-                .WithMany()
-                .HasForeignKey(p => p.UsuarioSistemaId);
-
-            modelBuilder.Entity<Aluno>()
-                .HasOne(a => a.UsuarioSistema)
-                .WithMany()
-                .HasForeignKey(a => a.UsuarioSistemaId);
-
-            modelBuilder.Entity<Atendente>()
-                .HasOne(a => a.UsuarioSistema)
-                .WithMany()
-                .HasForeignKey(a => a.UsuarioSistemaId);
-
+            // Configuração das chaves estrangeiras e relacionamentos
             modelBuilder.Entity<Aula>()
                 .HasOne(a => a.Professor)
                 .WithMany(p => p.Aulas)
@@ -53,10 +44,12 @@ namespace FloripaSurfClub.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Aula>()
-                .HasOne(a => a.Aluno)
-                .WithMany()
-                .HasForeignKey(a => a.AlunoId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasMany(a => a.Alunos)
+                .WithMany(al => al.Aulas)
+                .UsingEntity<Dictionary<string, object>>(
+                    "AulaAluno",
+                    j => j.HasOne<Aluno>().WithMany().HasForeignKey("AlunoId"),
+                    j => j.HasOne<Aula>().WithMany().HasForeignKey("AulaId"));
 
             modelBuilder.Entity<Aluguel>()
                 .HasOne(a => a.Equipamento)

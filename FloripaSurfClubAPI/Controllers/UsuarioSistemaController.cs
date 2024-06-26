@@ -24,7 +24,7 @@ namespace FloripaSurfClubAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Criar([FromBody] AlunoDTO usuarioDto)
+        public async Task<IActionResult> Criar([FromBody] DtoAluno usuarioDto)
         {
             if (usuarioDto == null)
                 return BadRequest();
@@ -73,6 +73,16 @@ namespace FloripaSurfClubAPI.Controllers
                             ValorAReceber = 0
                         };
                         ServiceAtendente.Criar(atendente);
+                        break;
+                    case ETipoUsuario.Cliente:
+                        var cliente = new Cliente
+                        {
+                            Nome = usuarioDto.Nome,
+                            ValorAPagar = 0,
+                            Email = usuarioDto.Email,
+                            Telefone = usuarioDto.Telefone
+                        }; 
+                        ServiceCliente.Criar(cliente);
                         break;
                     default:
                         return BadRequest("Tipo de usuário inválido.");

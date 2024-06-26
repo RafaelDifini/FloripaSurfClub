@@ -3,7 +3,7 @@
 
 namespace FloripaSurfClub.DTOs
 {
-    public class AlunoDTO : UsuarioSistemaDTO
+    public class DtoAluno : UsuarioSistemaDTO
     {
         public decimal Peso { get; set; }
         public int Altura { get; set; }

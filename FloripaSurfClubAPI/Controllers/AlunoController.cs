@@ -19,19 +19,6 @@ namespace FloripaSurfClubAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        public IActionResult Criar([FromBody] AlunoDTO alunoDto)
-        {
-            if (alunoDto == null)
-                return BadRequest();
-
-            var aluno = _mapper.Map<Aluno>(alunoDto);
-            var result = ServiceAlunos.Criar(aluno);
-            if (result)
-                return Ok();
-            else
-                return StatusCode(500, "Erro ao criar o aluno.");
-        }
 
         [HttpGet("{id}")]
         public IActionResult Buscar(Guid id)
@@ -40,7 +27,7 @@ namespace FloripaSurfClubAPI.Controllers
             if (aluno == null)
                 return NotFound();
 
-            var alunoDto = _mapper.Map<AlunoDTO>(aluno);
+            var alunoDto = _mapper.Map<DtoAluno>(aluno);
             return Ok(alunoDto);
         }
 
@@ -48,27 +35,20 @@ namespace FloripaSurfClubAPI.Controllers
         public IActionResult Listar()
         {
             var alunos = ServiceAlunos.Listar();
-            var alunosDto = _mapper.Map<List<AlunoDTO>>(alunos);
+            var alunosDto = _mapper.Map<List<DtoAluno>>(alunos);
             return Ok(alunosDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Atualizar(Guid id, [FromBody] AlunoDTO alunoDto)
+        public IActionResult Atualizar(Guid id, [FromBody] DtoAluno alunoDto)
         {
             if (alunoDto == null || alunoDto.Id != id)
                 return BadRequest();
 
-            var alunoExistente = ServiceAlunos.Buscar(id);
-            if (alunoExistente == null)
-                return NotFound();
+            var aluno = _mapper.Map<Aluno>(alunoDto);
+            aluno.Id = id;
 
-            alunoExistente.Nome = alunoDto.Nome;
-            alunoExistente.Peso = alunoDto.Peso;
-            alunoExistente.Altura = alunoDto.Altura;
-            alunoExistente.Nacionalidade = alunoDto.Nacionalidade;
-            alunoExistente.Nivel = alunoDto.Nivel;
-
-            var result = ServiceAlunos.Atualizar(alunoExistente);
+            var result = ServiceAlunos.Atualizar(aluno);
             if (result)
                 return Ok();
             else

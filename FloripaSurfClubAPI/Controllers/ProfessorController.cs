@@ -27,7 +27,7 @@ namespace FloripaSurfClubAPI.Controllers
             if (professor == null)
                 return NotFound();
 
-            var professorDto = _mapper.Map<ProfessorDTO>(professor);
+            var professorDto = _mapper.Map<DtoProfessor>(professor);
             return Ok(professorDto);
         }
 
@@ -35,25 +35,20 @@ namespace FloripaSurfClubAPI.Controllers
         public IActionResult Listar()
         {
             var professores = ServiceProfessor.Listar();
-            var professoresDto = _mapper.Map<List<ProfessorDTO>>(professores);
+            var professoresDto = _mapper.Map<List<DtoProfessor>>(professores);
             return Ok(professoresDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Atualizar(Guid id, [FromBody] ProfessorDTO professorDto)
+        public IActionResult Atualizar(Guid id, [FromBody] DtoProfessor professorDto)
         {
             if (professorDto == null || professorDto.Id != id)
                 return BadRequest();
 
-            var professorExistente = ServiceProfessor.Buscar(id);
-            if (professorExistente == null)
-                return NotFound();
+            var professor = _mapper.Map<Professor>(professorDto);
+            professor.Id = id;
 
-            // Atualizar apenas os campos necessários
-            professorExistente.Nome = professorDto.Nome;
-            professorExistente.ValorAReceber = professorDto.ValorAReceber;
-
-            var result = ServiceProfessor.Atualizar(professorExistente);
+            var result = ServiceProfessor.Atualizar(professor);
             if (result)
                 return Ok();
             else

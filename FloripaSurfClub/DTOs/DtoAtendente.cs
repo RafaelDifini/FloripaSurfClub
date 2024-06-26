@@ -1,6 +1,6 @@
 ﻿namespace FloripaSurfClub.DTOs
 {
-    public class AtendenteDTO : UsuarioSistemaDTO
+    public class DtoAtendente : UsuarioSistemaDTO
     {
         public decimal ValorAReceber { get; set; }
     }

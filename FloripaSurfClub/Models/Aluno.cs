@@ -13,5 +13,7 @@ namespace FloripaSurfClub.Models
         public int Altura { get; set; }
         public string Nacionalidade { get; set; }
         public ENivel Nivel { get; set; }
+
+        public List<Aula> Aulas { get; set; } = new List<Aula>();
     }
 }

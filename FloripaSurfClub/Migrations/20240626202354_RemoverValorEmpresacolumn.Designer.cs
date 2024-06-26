@@ -3,6 +3,7 @@ using System;
 using FloripaSurfClub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FloripaSurfClub.Migrations
 {
     [DbContext(typeof(FloripaSurfClubContext))]
-    partial class FloripaSurfClubContextModelSnapshot : ModelSnapshot
+    [Migration("20240626202354_RemoverValorEmpresacolumn")]
+    partial class RemoverValorEmpresacolumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace FloripaSurfClub.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("AulaAluno", b =>
-                {
-                    b.Property<Guid>("AlunoId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AulaId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("AlunoId", "AulaId");
-
-                    b.HasIndex("AulaId");
-
-                    b.ToTable("AulaAluno");
-                });
 
             modelBuilder.Entity("FloripaSurfClub.Models.Aluguel", b =>
                 {
@@ -97,7 +85,7 @@ namespace FloripaSurfClub.Migrations
 
                     b.HasIndex("UsuarioSistemaId");
 
-                    b.ToTable("Alunos", (string)null);
+                    b.ToTable("Alunos");
                 });
 
             modelBuilder.Entity("FloripaSurfClub.Models.Atendente", b =>
@@ -120,13 +108,16 @@ namespace FloripaSurfClub.Migrations
 
                     b.HasIndex("UsuarioSistemaId");
 
-                    b.ToTable("Atendentes", (string)null);
+                    b.ToTable("Atendentes");
                 });
 
             modelBuilder.Entity("FloripaSurfClub.Models.Aula", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AlunoId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Concluida")
@@ -145,6 +136,8 @@ namespace FloripaSurfClub.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AlunoId");
 
                     b.HasIndex("ProfessorId");
 
@@ -195,7 +188,7 @@ namespace FloripaSurfClub.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("UsuarioSistemaId")
+                    b.Property<Guid>("UsuarioSistemaId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("ValorAPagar")
@@ -205,7 +198,7 @@ namespace FloripaSurfClub.Migrations
 
                     b.HasIndex("UsuarioSistemaId");
 
-                    b.ToTable("Clientes", (string)null);
+                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("FloripaSurfClub.Models.Equipamento", b =>
@@ -246,7 +239,7 @@ namespace FloripaSurfClub.Migrations
 
                     b.HasIndex("UsuarioSistemaId");
 
-                    b.ToTable("Professores", (string)null);
+                    b.ToTable("Professores");
                 });
 
             modelBuilder.Entity("FloripaSurfClub.Models.UsuarioSistema", b =>
@@ -451,21 +444,6 @@ namespace FloripaSurfClub.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AulaAluno", b =>
-                {
-                    b.HasOne("FloripaSurfClub.Models.Aluno", null)
-                        .WithMany()
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FloripaSurfClub.Models.Aula", null)
-                        .WithMany()
-                        .HasForeignKey("AulaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FloripaSurfClub.Models.Aluguel", b =>
                 {
                     b.HasOne("FloripaSurfClub.Models.Cliente", "Cliente")
@@ -509,11 +487,19 @@ namespace FloripaSurfClub.Migrations
 
             modelBuilder.Entity("FloripaSurfClub.Models.Aula", b =>
                 {
+                    b.HasOne("FloripaSurfClub.Models.Aluno", "Aluno")
+                        .WithMany()
+                        .HasForeignKey("AlunoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("FloripaSurfClub.Models.Professor", "Professor")
                         .WithMany("Aulas")
                         .HasForeignKey("ProfessorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Aluno");
 
                     b.Navigation("Professor");
                 });
@@ -522,7 +508,9 @@ namespace FloripaSurfClub.Migrations
                 {
                     b.HasOne("FloripaSurfClub.Models.UsuarioSistema", "UsuarioSistema")
                         .WithMany()
-                        .HasForeignKey("UsuarioSistemaId");
+                        .HasForeignKey("UsuarioSistemaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UsuarioSistema");
                 });

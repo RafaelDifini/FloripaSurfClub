@@ -15,9 +15,23 @@ namespace FloripaSurfClub.Services
             return ReposAula.Agendar(pAula);
         }
 
-        public static bool Concluir(Aula pAula)
+        public static Aula Buscar(Guid pId)
         {
-            return ReposAula.Concluir(pAula);
+            return ReposAula.Buscar(pId);
+        }
+        public static List<Aula> Listar()
+        {
+            return ReposAula.Listar();
+        }
+
+        public static bool Remover(Guid pId)
+        {
+            return ReposAula.Remover(pId);
+        }
+
+        public static bool Atualizar(Aula pAula)
+        {
+            return ReposAula.Atualizar(pAula);
         }
     }
 }

@@ -43,13 +43,15 @@ internal class ReposProfessor
 
             if (professorExistente != null)
             {
-                professorExistente.UsuarioSistema.Nome = pProfessor.Nome;
-
-                professorExistente.ValorAReceber = pProfessor.ValorAReceber;
                 professorExistente.Nome = pProfessor.Nome;
+                professorExistente.ValorAReceber = pProfessor.ValorAReceber;
 
-                ctx.Entry(professorExistente.UsuarioSistema).State = EntityState.Modified;
+                professorExistente.UsuarioSistema.Nome = pProfessor.Nome;
+                professorExistente.UsuarioSistema.Email = pProfessor.UsuarioSistema.Email;
+                professorExistente.UsuarioSistema.PhoneNumber = pProfessor.UsuarioSistema.PhoneNumber;
+
                 ctx.Entry(professorExistente).State = EntityState.Modified;
+                ctx.Entry(professorExistente.UsuarioSistema).State = EntityState.Modified;
                 return ctx.SaveChanges() > 0;
             }
 
