@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace FloripaSurfClub.Enums
 {
-    public enum TipoEquipamento
+    public enum ETipoUsuario
     {
-        PranchaFibra = 0,
-        PranchaSoft = 1,
-        RoupaDeBorracha = 2,
-        Lycra = 3,
-        Leash = 4
+        Professor = 0,
+        Aluno = 1,
+        Cliente = 2,
+        Atendente = 3
     }
 }

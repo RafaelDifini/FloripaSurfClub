@@ -11,7 +11,7 @@ namespace FloripaSurfClub.Models
     {
         public Guid Id { get; set; }
         public string Nome { get; set; }
-        public TipoEquipamento Tipo { get; set; }
+        public ETipoEquipamento Tipo { get; set; }
 
     }
 }

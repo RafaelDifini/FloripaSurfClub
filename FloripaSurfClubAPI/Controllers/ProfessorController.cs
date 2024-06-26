@@ -1,4 +1,6 @@
-﻿using FloripaSurfClub.Models;
+﻿using AutoMapper;
+using FloripaSurfClub.DTOs;
+using FloripaSurfClub.Models;
 using FloripaSurfClub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,19 +12,13 @@ namespace FloripaSurfClubAPI.Controllers
     [ApiController]
     public class ProfessorController : ControllerBase
     {
+        private readonly IMapper _mapper;
 
-        [HttpPost]
-        public IActionResult Criar([FromBody] Professor professor)
+        public ProfessorController(IMapper mapper)
         {
-            if (professor == null)
-                return BadRequest();
-
-            var result = ServiceProfessor.Criar(professor);
-            if (result)
-                return Ok();
-            else
-                return StatusCode(500, "Erro ao criar o professor.");
+            _mapper = mapper;
         }
+
 
         [HttpGet("{id}")]
         public IActionResult Buscar(Guid id)
@@ -31,28 +27,39 @@ namespace FloripaSurfClubAPI.Controllers
             if (professor == null)
                 return NotFound();
 
-            return Ok(professor);
+            var professorDto = _mapper.Map<ProfessorDTO>(professor);
+            return Ok(professorDto);
         }
 
         [HttpGet]
         public IActionResult Listar()
         {
             var professores = ServiceProfessor.Listar();
-            return Ok(professores);
+            var professoresDto = _mapper.Map<List<ProfessorDTO>>(professores);
+            return Ok(professoresDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Atualizar(Guid id, [FromBody] Professor professor)
+        public IActionResult Atualizar(Guid id, [FromBody] ProfessorDTO professorDto)
         {
-            if (professor == null || professor.Id != id)
+            if (professorDto == null || professorDto.Id != id)
                 return BadRequest();
 
-            var result = ServiceProfessor.Atualizar(professor);
+            var professorExistente = ServiceProfessor.Buscar(id);
+            if (professorExistente == null)
+                return NotFound();
+
+            // Atualizar apenas os campos necessários
+            professorExistente.Nome = professorDto.Nome;
+            professorExistente.ValorAReceber = professorDto.ValorAReceber;
+
+            var result = ServiceProfessor.Atualizar(professorExistente);
             if (result)
                 return Ok();
             else
                 return StatusCode(500, "Erro ao atualizar o professor.");
         }
+
 
         [HttpDelete("{id}")]
         public IActionResult Remover(Guid id)

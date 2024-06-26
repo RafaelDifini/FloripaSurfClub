@@ -35,7 +35,7 @@ namespace FloripaSurfClub.Repositories
                 var professor = ctx.Professores.Find(pAula.ProfessorId);
                 if (professor != null)
                 {
-                    professor.ValoresAReceber += pAula.Valor * 0.5m;
+                    professor.ValorAReceber += pAula.Valor * 0.5m;
                     ctx.Entry(professor).State = EntityState.Modified;
                 }
 

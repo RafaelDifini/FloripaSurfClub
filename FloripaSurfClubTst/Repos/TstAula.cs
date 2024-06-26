@@ -26,8 +26,8 @@ namespace FloripaSurfClubTst.Repos
             var aula = new Aula
             {
                 Id = Guid.NewGuid(), // Gera um novo ID único para a aula
-                ProfessorId = professor.Id,
-                AlunoId = aluno.Id,
+                ProfessorId = professor.UsuarioSistema.Id,
+                AlunoId = aluno.UsuarioSistema.Id,
                 Professor = professor,
                 Aluno = aluno,
                 Valor = 150,

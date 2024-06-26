@@ -17,7 +17,7 @@ namespace FloripaSurfClubTst.Repos
         {
             Professor professor = new Professor();
             professor.Nome = "Roger";
-            professor.Id = Guid.NewGuid();
+            professor.UsuarioSistema.Id = Guid.NewGuid();
 
             bool result = ServiceProfessor.Criar(professor);
             Assert.IsTrue(result);
@@ -58,7 +58,7 @@ namespace FloripaSurfClubTst.Repos
             var professor = professores.FirstOrDefault();
 
             professor.Nome = "Rafael";
-            professor.ValoresAReceber = 150;
+            professor.ValorAReceber = 150;
 
             bool result = ServiceProfessor.Atualizar(professor);
             Assert.IsTrue(result);
