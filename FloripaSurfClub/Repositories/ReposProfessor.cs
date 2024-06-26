@@ -55,12 +55,18 @@ namespace FloripaSurfClub.Repositories
             }
         }
 
-        internal static bool EstaDisponivel(Professor professor, DateTime pDataHora)
+        internal static bool EstaDisponivel(Professor professor, DateTime dataHora)
         {
             using (var ctx = new FloripaSurfClubContext())
             {
+                // Ignorar milissegundos na comparação de data e hora
                 var aulaExistente = ctx.Aulas
-                    .Any(a => a.Professor.Id == professor.Id && a.DataInicio == pDataHora);
+                    .Any(a => a.ProfessorId == professor.Id &&
+                              a.DataInicio.Year == dataHora.Year &&
+                              a.DataInicio.Month == dataHora.Month &&
+                              a.DataInicio.Day == dataHora.Day &&
+                              a.DataInicio.Hour == dataHora.Hour &&
+                              a.DataInicio.Minute == dataHora.Minute);
 
                 return !aulaExistente;
             }

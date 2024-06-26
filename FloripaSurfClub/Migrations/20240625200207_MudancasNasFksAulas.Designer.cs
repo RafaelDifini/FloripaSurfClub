@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FloripaSurfClub.Migrations
 {
     [DbContext(typeof(FloripaSurfClubContext))]
-    [Migration("20240625170930_Aula")]
-    partial class Aula
+    [Migration("20240625200207_MudancasNasFksAulas")]
+    partial class MudancasNasFksAulas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,9 @@ namespace FloripaSurfClub.Migrations
 
                     b.Property<DateTime>("DataInicio")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Encerrado")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("EquipamentoId")
                         .HasColumnType("uuid");
@@ -67,8 +70,14 @@ namespace FloripaSurfClub.Migrations
                     b.Property<DateTime>("DataInicio")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("EhPacote")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("ProfessorId")
                         .HasColumnType("uuid");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -127,9 +136,6 @@ namespace FloripaSurfClub.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("Disponivel")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("text");
@@ -183,18 +189,23 @@ namespace FloripaSurfClub.Migrations
                     b.HasOne("FloripaSurfClub.Models.Aluno", "Aluno")
                         .WithMany()
                         .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FloripaSurfClub.Models.Professor", "Professor")
-                        .WithMany()
+                        .WithMany("Aulas")
                         .HasForeignKey("ProfessorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Aluno");
 
                     b.Navigation("Professor");
+                });
+
+            modelBuilder.Entity("FloripaSurfClub.Models.Professor", b =>
+                {
+                    b.Navigation("Aulas");
                 });
 #pragma warning restore 612, 618
         }

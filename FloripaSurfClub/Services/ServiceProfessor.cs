@@ -32,5 +32,10 @@ namespace FloripaSurfClub.Services
             return ReposProfessor.Remover(pId);
         }
 
+        public static bool EstaDisponivel(Professor pProfessor, DateTime pDataHora)
+        {
+            return ReposProfessor.EstaDisponivel(pProfessor,pDataHora);
+        }
+
     }
 }

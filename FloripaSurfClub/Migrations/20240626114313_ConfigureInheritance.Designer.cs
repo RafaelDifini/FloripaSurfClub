@@ -3,6 +3,7 @@ using System;
 using FloripaSurfClub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FloripaSurfClub.Migrations
 {
     [DbContext(typeof(FloripaSurfClubContext))]
-    partial class FloripaSurfClubContextModelSnapshot : ModelSnapshot
+    [Migration("20240626114313_ConfigureInheritance")]
+    partial class ConfigureInheritance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,6 +216,23 @@ namespace FloripaSurfClub.Migrations
                     b.ToTable("Professores");
                 });
 
+            modelBuilder.Entity("FloripaSurfClub.Models.Aluno", b =>
+                {
+                    b.HasBaseType("FloripaSurfClub.Models.Pessoa");
+
+                    b.Property<int>("Altura")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Nacionalidade")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Peso")
+                        .HasColumnType("numeric");
+
+                    b.ToTable("Alunos", (string)null);
+                });
+
             modelBuilder.Entity("FloripaSurfClub.Models.Atendente", b =>
                 {
                     b.HasBaseType("FloripaSurfClub.Models.Pessoa");
@@ -235,23 +255,6 @@ namespace FloripaSurfClub.Migrations
                         .HasColumnType("numeric");
 
                     b.ToTable("Clientes", (string)null);
-                });
-
-            modelBuilder.Entity("FloripaSurfClub.Models.Aluno", b =>
-                {
-                    b.HasBaseType("FloripaSurfClub.Models.Cliente");
-
-                    b.Property<int>("Altura")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Nacionalidade")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Peso")
-                        .HasColumnType("numeric");
-
-                    b.ToTable("Alunos", (string)null);
                 });
 
             modelBuilder.Entity("FloripaSurfClub.Models.Aluguel", b =>
@@ -292,6 +295,15 @@ namespace FloripaSurfClub.Migrations
                     b.Navigation("Professor");
                 });
 
+            modelBuilder.Entity("FloripaSurfClub.Models.Aluno", b =>
+                {
+                    b.HasOne("FloripaSurfClub.Models.Pessoa", null)
+                        .WithOne()
+                        .HasForeignKey("FloripaSurfClub.Models.Aluno", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FloripaSurfClub.Models.Atendente", b =>
                 {
                     b.HasOne("FloripaSurfClub.Models.Pessoa", null)
@@ -306,15 +318,6 @@ namespace FloripaSurfClub.Migrations
                     b.HasOne("FloripaSurfClub.Models.Pessoa", null)
                         .WithOne()
                         .HasForeignKey("FloripaSurfClub.Models.Cliente", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("FloripaSurfClub.Models.Aluno", b =>
-                {
-                    b.HasOne("FloripaSurfClub.Models.Cliente", null)
-                        .WithOne()
-                        .HasForeignKey("FloripaSurfClub.Models.Aluno", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

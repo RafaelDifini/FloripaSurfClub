@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FloripaSurfClubAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AulaController : Controller
     {
         [HttpPost]
@@ -12,7 +14,7 @@ namespace FloripaSurfClubAPI.Controllers
             if (aula == null)
                 return BadRequest();
 
-            var result = ServiceAula.AgendarAula(aula);
+            var result = ServiceAula.Agendar(aula);
             if (result)
                 return Ok();
             else

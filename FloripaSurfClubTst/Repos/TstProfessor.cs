@@ -13,7 +13,7 @@ namespace FloripaSurfClubTst.Repos
     {
 
         [TestMethod]
-        public void CriarAluno()
+        public void Criar()
         {
             Professor professor = new Professor();
             professor.Nome = "Roger";
@@ -28,6 +28,19 @@ namespace FloripaSurfClubTst.Repos
         {
             var lista = ServiceProfessor.Listar();
             Assert.IsNotNull(lista);
+        }
+
+        [TestMethod]
+        public void VerificarDisponibilidade()
+        {
+            var prefessores = ServiceProfessor.Listar();
+
+            var professor = prefessores.FirstOrDefault();
+
+            var dataVerificacao = new DateTime(2024, 6, 26, 15,0,0);
+            bool disponivel = ServiceProfessor.EstaDisponivel(professor, dataVerificacao);
+
+            Assert.IsFalse(disponivel);
         }
 
         [TestMethod]

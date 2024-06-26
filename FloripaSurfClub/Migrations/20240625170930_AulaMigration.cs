@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FloripaSurfClub.Migrations
 {
     /// <inheritdoc />
-    public partial class Aula : Migration
+    public partial class AulaMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

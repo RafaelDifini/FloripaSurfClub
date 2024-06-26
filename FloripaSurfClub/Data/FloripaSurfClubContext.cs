@@ -18,13 +18,29 @@ namespace FloripaSurfClub.Data
         public DbSet<Equipamento> Equipamentos { get; set; }
         public DbSet<Professor> Professores { get; set; }
         public DbSet<Aula> Aulas { get; set; }
-
+        public DbSet<Caixa> Caixa { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configurações adicionais se necessário
+            modelBuilder.Entity<Pessoa>().ToTable("Pessoas");
+            modelBuilder.Entity<Aluno>().ToTable("Alunos");
+            modelBuilder.Entity<Atendente>().ToTable("Atendentes");
+            modelBuilder.Entity<Cliente>().ToTable("Clientes");
+
+
+            modelBuilder.Entity<Aula>()
+                 .HasOne(a => a.Professor)
+                 .WithMany(p => p.Aulas)
+                 .HasForeignKey(a => a.ProfessorId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Aula>()
+                .HasOne(a => a.Aluno)
+                .WithMany()
+                .HasForeignKey(a => a.AlunoId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

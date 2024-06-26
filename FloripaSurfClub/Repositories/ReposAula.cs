@@ -1,5 +1,6 @@
 ﻿using FloripaSurfClub.Data;
 using FloripaSurfClub.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,23 +19,29 @@ namespace FloripaSurfClub.Repositories
 
                 if (!professorDisponivel)
                 {
-                    // Professor já tem uma aula agendada nesse horário
                     return false;
                 }
+                ctx.Entry(pAula).State = EntityState.Added;
+                return ctx.SaveChanges() > 0;
+            }
+        }
 
-                ctx.Aulas.Add(pAula);
+        internal static bool Concluir(Aula pAula)
+        {
+            using (var ctx = new FloripaSurfClubContext())
+            {
+                ctx.Entry(pAula).State = EntityState.Modified;
 
-                var professor = ctx.Professores.FirstOrDefault(p => p.Id == pAula.Professor.Id);
+                var professor = ctx.Professores.Find(pAula.ProfessorId);
                 if (professor != null)
                 {
                     professor.ValoresAReceber += pAula.Valor * 0.5m;
-                    ctx.Professores.Update(professor);
+                    ctx.Entry(professor).State = EntityState.Modified;
                 }
 
                 return ctx.SaveChanges() > 0;
             }
         }
-
 
         internal static Aula Buscar(Guid pId)
         {

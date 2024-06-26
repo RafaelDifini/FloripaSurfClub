@@ -3,6 +3,7 @@ using FloripaSurfClub.Data;
 using FloripaSurfClub.Repositories;
 using FloripaSurfClub.Services;
 using Microsoft.OpenApi.Models;
+using FloripaSurfClub.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<FloripaSurfClubContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Adiciona serviços de controllers
+builder.Services.AddDefaultIdentity<Pessoa>()
+    .AddEntityFrameworkStores<FloripaSurfClubContext>();
+
 builder.Services.AddControllers();
 
 // Adiciona e configura o Swagger

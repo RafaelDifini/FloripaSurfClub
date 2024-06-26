@@ -3,6 +3,7 @@ using System;
 using FloripaSurfClub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FloripaSurfClub.Migrations
 {
     [DbContext(typeof(FloripaSurfClubContext))]
-    partial class FloripaSurfClubContextModelSnapshot : ModelSnapshot
+    [Migration("20240625193451_MudancasProfessores")]
+    partial class MudancasProfessores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,9 +67,6 @@ namespace FloripaSurfClub.Migrations
                     b.Property<Guid>("AlunoId")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("Concluida")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("DataInicio")
                         .HasColumnType("timestamp with time zone");
 
@@ -88,33 +88,28 @@ namespace FloripaSurfClub.Migrations
                     b.ToTable("Aulas");
                 });
 
-            modelBuilder.Entity("FloripaSurfClub.Models.Caixa", b =>
+            modelBuilder.Entity("FloripaSurfClub.Models.Cliente", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DataAbertura")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)");
 
-                    b.Property<DateTime>("DataFechamento")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("IdUsuarioAbertura")
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("ValorColaboradores")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("ValorEmpresa")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("ValorTotal")
-                        .HasColumnType("numeric");
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Caixa");
+                    b.ToTable("Clientes");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Cliente");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("FloripaSurfClub.Models.Equipamento", b =>
@@ -135,66 +130,6 @@ namespace FloripaSurfClub.Migrations
                     b.ToTable("Equipamentos");
                 });
 
-            modelBuilder.Entity("FloripaSurfClub.Models.Pessoa", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Pessoas", (string)null);
-
-                    b.UseTptMappingStrategy();
-                });
-
             modelBuilder.Entity("FloripaSurfClub.Models.Professor", b =>
                 {
                     b.Property<Guid>("Id")
@@ -213,30 +148,6 @@ namespace FloripaSurfClub.Migrations
                     b.ToTable("Professores");
                 });
 
-            modelBuilder.Entity("FloripaSurfClub.Models.Atendente", b =>
-                {
-                    b.HasBaseType("FloripaSurfClub.Models.Pessoa");
-
-                    b.Property<decimal>("ValorAReceber")
-                        .HasColumnType("numeric");
-
-                    b.ToTable("Atendentes", (string)null);
-                });
-
-            modelBuilder.Entity("FloripaSurfClub.Models.Cliente", b =>
-                {
-                    b.HasBaseType("FloripaSurfClub.Models.Pessoa");
-
-                    b.Property<string>("Telefone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("ValorAPagar")
-                        .HasColumnType("numeric");
-
-                    b.ToTable("Clientes", (string)null);
-                });
-
             modelBuilder.Entity("FloripaSurfClub.Models.Aluno", b =>
                 {
                     b.HasBaseType("FloripaSurfClub.Models.Cliente");
@@ -251,7 +162,7 @@ namespace FloripaSurfClub.Migrations
                     b.Property<decimal>("Peso")
                         .HasColumnType("numeric");
 
-                    b.ToTable("Alunos", (string)null);
+                    b.HasDiscriminator().HasValue("Aluno");
                 });
 
             modelBuilder.Entity("FloripaSurfClub.Models.Aluguel", b =>
@@ -278,45 +189,18 @@ namespace FloripaSurfClub.Migrations
                     b.HasOne("FloripaSurfClub.Models.Aluno", "Aluno")
                         .WithMany()
                         .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FloripaSurfClub.Models.Professor", "Professor")
                         .WithMany("Aulas")
                         .HasForeignKey("ProfessorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Aluno");
 
                     b.Navigation("Professor");
-                });
-
-            modelBuilder.Entity("FloripaSurfClub.Models.Atendente", b =>
-                {
-                    b.HasOne("FloripaSurfClub.Models.Pessoa", null)
-                        .WithOne()
-                        .HasForeignKey("FloripaSurfClub.Models.Atendente", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("FloripaSurfClub.Models.Cliente", b =>
-                {
-                    b.HasOne("FloripaSurfClub.Models.Pessoa", null)
-                        .WithOne()
-                        .HasForeignKey("FloripaSurfClub.Models.Cliente", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("FloripaSurfClub.Models.Aluno", b =>
-                {
-                    b.HasOne("FloripaSurfClub.Models.Cliente", null)
-                        .WithOne()
-                        .HasForeignKey("FloripaSurfClub.Models.Aluno", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("FloripaSurfClub.Models.Professor", b =>
