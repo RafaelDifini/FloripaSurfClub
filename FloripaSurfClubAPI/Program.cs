@@ -5,6 +5,7 @@ using FloripaSurfClub.Services;
 using Microsoft.OpenApi.Models;
 using FloripaSurfClub.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

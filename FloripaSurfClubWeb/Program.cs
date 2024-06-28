@@ -1,18 +1,37 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using FloripaSurfClub.Data;
+using FloripaSurfClub.Models;
+using System.Text;
+using FloripaSurfClubWeb.Mapping;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Configura o serviço DbContext para usar PostgreSQL
+// Configurar banco de dados
+builder.Services.AddDbContext<FloripaSurfClubContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Adicione outros serviços necessários aqui
-builder.Services.AddControllers();
+// Configurar Identity
+builder.Services.AddIdentity<UsuarioSistema, IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<FloripaSurfClubContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromHours(6);
+    options.LoginPath = "/Account/Login";
+    options.SlidingExpiration = true;
+});
+
+builder.Services.AddControllersWithViews();
+// Adicionar AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
-// Configuração do middleware
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-else
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
@@ -23,8 +42,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

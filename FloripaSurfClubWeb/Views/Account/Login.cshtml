@@ -1,0 +1,58 @@
+﻿@model FloripaSurfClubWeb.Models.Account.LoginViewModel
+<div class="container-login">
+    <div class="teste">
+        <div class="header-login d-flex justify-content-center">
+            <img src="~/img/Group 4.png" alt="">
+        </div>
+    </div>
+
+    <div class="center">
+        <div class="login d-flex justify-content-center">
+
+            <form name="formLogin" asp-controller="Account" asp-action="Login" method="post"
+                  class="m-0 p-0">
+                <div class="content-login">
+
+                    <div class="credenciais-login">
+                        <div class="titulos">
+                            <h1 class="mb-0"> Bem vindo!</h1>
+                            <h1>Faça seu login.</h1>
+                        </div>
+                        <div class="inputs mt-4 mb-4">
+                            <div>
+                                <label>Email</label>
+                                <input type="email" asp-for="Email" value="rogersurf@gmail.com" placeholder="Digite seu email" class="form-control mb-3" validar="UserName" class="form-control input-login" />
+                                <span asp-validation-for="Email" class="text-danger validation"></span>
+                            </div>
+                            <div class="position">
+                                <label for="floatingPassword">Senha</label>
+
+                                <input type="password" asp-for="Senha" value="SYNgates*1234" validar="Senha" id="senhaaa" class="form-control input-login" />
+
+                                @*   <i class="material-icons eye" onclick="mostrarSenha()" id="btn-senha">
+                                visibility_off
+                                </i> *@
+
+                                <span asp-validation-for="Senha" class="text-danger"></span>
+                                @* <input type="checkbox" onclick="ShowHidePassword(this.id,'senha')" name="mostrarSenha" id="mostrarSenha" class="form-check-input" /> *@
+                            </div>
+                        </div>
+
+
+                        <button class="btn btn-login d-grid mb-4 w-100" type="submit">Entrar</button>
+
+                        <span class="forget">Esqueceu sua senha? <a asp-action="RedefinicaoSenha">Clique aqui.</a></span>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        // await Html.RenderPartialAsync("_LoginJsScriptPartial");
+    }
+
+}
