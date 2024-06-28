@@ -13,6 +13,7 @@ using FloripaSurfClub.Services;
 using FloripaSurfClubWeb.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FloripaSurfClubWeb.Controllers
 {
@@ -67,6 +68,7 @@ namespace FloripaSurfClubWeb.Controllers
 
         public async Task<IActionResult> Registrar()
         {
+            ViewBag.TipoUsuarioList = GetTipoUsuarioList();
             return View();
         }
 
@@ -135,7 +137,7 @@ namespace FloripaSurfClubWeb.Controllers
                         return BadRequest("Tipo de usuário inválido.");
                 }
 
-                TempData["ShowToast"] = "true";  
+                TempData["ShowToast"] = "true";
                 return RedirectToAction("Registrar");
             }
             else
@@ -143,5 +145,17 @@ namespace FloripaSurfClubWeb.Controllers
                 return StatusCode(500, "Erro ao criar o usuário.");
             }
         }
+
+        private List<SelectListItem> GetTipoUsuarioList()
+        {
+            return Enum.GetValues(typeof(ETipoUsuario))
+                       .Cast<ETipoUsuario>()
+                       .Select(e => new SelectListItem
+                       {
+                           Value = ((int)e).ToString(),
+                           Text = e.ToString()
+                       }).ToList();
+        }
     }
+
 }

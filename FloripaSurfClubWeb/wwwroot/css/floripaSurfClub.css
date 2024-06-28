@@ -1,8 +1,4 @@
-﻿/*body {
-    font-family: 'Roboto', Arial, Arial, Helvetica, sans-serif;
-    height: 100% !important;
-}
-
+﻿
 .panel-default {
     padding-top: 1%;
     margin-top: 1rem;
@@ -35,7 +31,21 @@ legend {
 }
 
 
+.container {
+    margin-top: 100px;
+}
+
 .card-sobreado {
-    box-shadow: 2px 0px 19px -10px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-}*/
+}
+
+.input-login {
+    margin-bottom: 10px;
+}
+
+.btn-secondary {
+    width: 100%;
+}
