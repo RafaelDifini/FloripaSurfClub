@@ -138,7 +138,7 @@ namespace FloripaSurfClubWeb.Controllers
                 }
 
                 TempData["ShowToast"] = "true";
-                return RedirectToAction("Registrar");
+                return RedirectToAction("Index","Home");
             }
             else
             {

@@ -1,21 +1,29 @@
-﻿const toggler = document.querySelector(".btn");
-toggler.addEventListener("click", function () {
-    document.querySelector("#sidebar").classList.toggle("collapsed");
-});
+﻿document.addEventListener('DOMContentLoaded', function () {
+    const toggler = document.querySelector(".btn");
+    if (toggler) {
+        toggler.addEventListener("click", function () {
+            document.querySelector("#sidebar").classList.toggle("collapsed");
+        });
+    }
 
+    if (typeof showToast !== 'undefined' && showToast) {
+        showToastIfNeeded('successToast');
+    }
+
+    const tipoUsuarioSelect = document.querySelector("select[name='TipoUsuario']");
+    if (tipoUsuarioSelect) {
+        tipoUsuarioSelect.addEventListener("change", function () {
+            toggleAlunoFields(this);
+        });
+
+        toggleAlunoFields(tipoUsuarioSelect);
+    }
+});
 
 function showToastIfNeeded(elementId) {
-    var showToast = '@TempData["ShowToast"]' === 'true';
-    if (showToast) {
-        var toastElement = new bootstrap.Toast(document.getElementById(elementId));
-        toastElement.show();
-    }
+    var toastElement = new bootstrap.Toast(document.getElementById(elementId));
+    toastElement.show();
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    showToastIfNeeded('successToast');
-});
-
 
 function toggleAlunoFields(selectElement) {
     var alunoFields = document.getElementById("alunoFields");
