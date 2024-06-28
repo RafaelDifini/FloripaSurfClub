@@ -8,26 +8,26 @@ namespace FloripaSurfClubWeb.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<UsuarioSistema, UsuarioSistemaDTO>().ReverseMap();
+            CreateMap<UsuarioSistema, DtoUsuarioSistema>().ReverseMap();
 
             CreateMap<Aluno, DtoAluno>()
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.UsuarioSistema.Email))
                 .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.UsuarioSistema.PhoneNumber))
-                .ForMember(dest => dest.Password, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Senha, opt => opt.Ignore()) 
                 .ForMember(dest => dest.TipoUsuario, opt => opt.MapFrom(src => src.UsuarioSistema.TipoUsuario))
                 .ReverseMap();
 
             CreateMap<Professor, DtoProfessor>()
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.UsuarioSistema.Email))
                 .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.UsuarioSistema.PhoneNumber))
-                .ForMember(dest => dest.Password, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Senha, opt => opt.Ignore()) 
                 .ForMember(dest => dest.TipoUsuario, opt => opt.MapFrom(src => src.UsuarioSistema.TipoUsuario))
                 .ReverseMap();
 
             CreateMap<Atendente, DtoAtendente>()
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.UsuarioSistema.Email))
                 .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.UsuarioSistema.PhoneNumber))
-                .ForMember(dest => dest.Password, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Senha, opt => opt.Ignore()) 
                 .ForMember(dest => dest.TipoUsuario, opt => opt.MapFrom(src => src.UsuarioSistema.TipoUsuario))
                 .ReverseMap();
 

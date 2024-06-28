@@ -56,47 +56,50 @@ namespace FloripaSurfClubWeb.Controllers
 
                 if (result.Succeeded)
                 {
+                    TempData["ShowToast"] = "true";
                     return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError(string.Empty, "Login ou senha inválidos.");
             }
-
             return View(loginViewModel);
         }
 
-
+        public async Task<IActionResult> Registrar()
+        {
+            return View();
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Registrar([FromBody] DtoAluno usuarioDto)
+        public async Task<IActionResult> Registrar(RegistrarUsuarioInputModel usuarioInputModel)
         {
-            if (usuarioDto == null)
-                return BadRequest();
+            if (!ModelState.IsValid)
+                return View(usuarioInputModel);
 
             var usuario = new UsuarioSistema
             {
-                UserName = usuarioDto.Email,
-                Email = usuarioDto.Email,
-                Nome = usuarioDto.Nome,
-                PhoneNumber = usuarioDto.Telefone,
-                TipoUsuario = usuarioDto.TipoUsuario
+                UserName = usuarioInputModel.Email,
+                Email = usuarioInputModel.Email,
+                Nome = usuarioInputModel.Nome,
+                PhoneNumber = usuarioInputModel.Telefone,
+                TipoUsuario = usuarioInputModel.TipoUsuario
             };
 
-            var result = await _userManager.CreateAsync(usuario, usuarioDto.Password);
+            var result = await _userManager.CreateAsync(usuario, usuarioInputModel.Senha);
 
             if (result.Succeeded)
             {
-                switch (usuarioDto.TipoUsuario)
+                switch (usuarioInputModel.TipoUsuario)
                 {
                     case ETipoUsuario.Aluno:
                         var aluno = new Aluno
                         {
                             UsuarioSistemaId = usuario.Id,
-                            Nome = usuarioDto.Nome,
-                            Peso = usuarioDto.Peso,
-                            Altura = usuarioDto.Altura,
-                            Nacionalidade = usuarioDto.Nacionalidade,
-                            Nivel = usuarioDto.Nivel
+                            Nome = usuarioInputModel.Nome,
+                            Peso = usuarioInputModel.Peso.Value,
+                            Altura = usuarioInputModel.Altura.Value,
+                            Nacionalidade = usuarioInputModel.Nacionalidade,
+                            Nivel = usuarioInputModel.Nivel.Value
                         };
                         ServiceAlunos.Criar(aluno);
                         break;
@@ -104,7 +107,7 @@ namespace FloripaSurfClubWeb.Controllers
                         var professor = new Professor
                         {
                             UsuarioSistemaId = usuario.Id,
-                            Nome = usuarioDto.Nome,
+                            Nome = usuarioInputModel.Nome,
                             ValorAReceber = 0
                         };
                         ServiceProfessor.Criar(professor);
@@ -113,7 +116,7 @@ namespace FloripaSurfClubWeb.Controllers
                         var atendente = new Atendente
                         {
                             UsuarioSistemaId = usuario.Id,
-                            Nome = usuarioDto.Nome,
+                            Nome = usuarioInputModel.Nome,
                             ValorAReceber = 0
                         };
                         ServiceAtendente.Criar(atendente);
@@ -121,10 +124,10 @@ namespace FloripaSurfClubWeb.Controllers
                     case ETipoUsuario.Cliente:
                         var cliente = new Cliente
                         {
-                            Nome = usuarioDto.Nome,
+                            Nome = usuarioInputModel.Nome,
                             ValorAPagar = 0,
-                            Email = usuarioDto.Email,
-                            Telefone = usuarioDto.Telefone
+                            Email = usuarioInputModel.Email,
+                            Telefone = usuarioInputModel.Telefone
                         };
                         ServiceCliente.Criar(cliente);
                         break;
@@ -132,7 +135,8 @@ namespace FloripaSurfClubWeb.Controllers
                         return BadRequest("Tipo de usuário inválido.");
                 }
 
-                return Ok();
+                TempData["ShowToast"] = "true";  
+                return RedirectToAction("Registrar");
             }
             else
             {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -18,6 +18,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FloripaSurfClub\FloripaSurfClub.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Cliente\" />
+    <Folder Include="Views\Atendente\" />
+    <Folder Include="Views\Caixa\" />
+    <Folder Include="Views\Aula\" />
+    <Folder Include="Views\Professor\" />
   </ItemGroup>
 
 </Project>

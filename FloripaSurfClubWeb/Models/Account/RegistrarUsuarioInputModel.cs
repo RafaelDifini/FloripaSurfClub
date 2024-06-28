@@ -1,15 +1,15 @@
 ﻿using FloripaSurfClub.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace FloripaSurfClub.DTOs
+namespace FloripaSurfClubWeb.Models.Account
 {
-    public class DtoUsuarioSistema
+    public class RegistrarUsuarioInputModel
     {
         public Guid Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
         public string Telefone { get; set; }
-        
+
         [DataType(DataType.Password)]
         public string Senha { get; set; }
 
@@ -18,5 +18,9 @@ namespace FloripaSurfClub.DTOs
         [Compare("Senha", ErrorMessage = "As senhas não conferem")]
         public string? ConfirmaSenha { get; set; }
         public ETipoUsuario TipoUsuario { get; set; }
+        public decimal? Peso { get; set; }
+        public int? Altura { get; set; }
+        public string? Nacionalidade { get; set; }
+        public ENivel? Nivel { get; set; }
     }
 }
